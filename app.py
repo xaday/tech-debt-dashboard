@@ -581,5 +581,132 @@ with tab_people:
     _ppl_selectbox("genai_intervention", "GenAI Intervention", "genai_intervention")
 
 with tab_dashboard:
+    import plotly.graph_objects as go
+
     st.markdown("### Dashboard")
-    st.info("Complete all tabs then click Calculate.")
+
+    if st.button("Calculate", type="primary"):
+        st.session_state["results"] = _calculate_results(
+            st.session_state.assessment
+        )
+
+    if "results" not in st.session_state:
+        st.info("Fill in all tabs and click Calculate to see results.")
+        st.stop()
+
+    results = st.session_state["results"]
+
+    # ── KPI row ───────────────────────────────────────────────────────────────
+    k1, k2, k3, k4 = st.columns(4)
+    k1.metric("App Score (avg)", f"{results['scores']['application']:.1f}")
+    k2.metric("Infra Score (avg)", f"{results['scores']['infrastructure']:.1f}")
+    k3.metric("Arch Score (avg)", f"{results['scores']['architecture']:.1f}")
+    k4.metric("People Score (avg)", f"{results['scores']['people']:.1f}")
+
+    c1, c2 = st.columns(2)
+    c1.metric("Total Annual Interest (kUSD)", f"{results['total_interest']:.1f}")
+    c2.metric("Total TCO (kUSD/year)", f"{results['total_tco']:.1f}")
+
+    # ── Radar chart — scores by dimension ────────────────────────────────────
+    st.markdown("#### Tech Debt Score by Dimension")
+    dims = ["Application", "Infrastructure", "Architecture", "People"]
+    dim_scores = [
+        results["scores"]["application"],
+        results["scores"]["infrastructure"],
+        results["scores"]["architecture"],
+        results["scores"]["people"],
+    ]
+    radar_fig = go.Figure(go.Scatterpolar(
+        r=dim_scores + [dim_scores[0]],
+        theta=dims + [dims[0]],
+        fill="toself",
+        fillcolor="rgba(161,0,255,0.2)",
+        line=dict(color="#A100FF"),
+    ))
+    radar_fig.update_layout(
+        polar=dict(
+            radialaxis=dict(visible=True, range=[0, 5], color="#FFFFFF"),
+            angularaxis=dict(color="#FFFFFF"),
+            bgcolor="#1A1A1A",
+        ),
+        paper_bgcolor="#000000",
+        plot_bgcolor="#000000",
+        font=dict(color="#FFFFFF"),
+        showlegend=False,
+        margin=dict(l=40, r=40, t=40, b=40),
+    )
+    st.plotly_chart(radar_fig, use_container_width=True)
+
+    # ── Bar chart — interest cost by application ──────────────────────────────
+    if results["app_details"]:
+        st.markdown("#### Annual Interest Cost by Application (kUSD)")
+        app_names = [d["name"] for d in results["app_details"]]
+        app_interests = [d["interest"] for d in results["app_details"]]
+        bar_fig = go.Figure(go.Bar(
+            x=app_names,
+            y=app_interests,
+            marker_color="#A100FF",
+            text=[f"{v:.1f}" for v in app_interests],
+            textposition="outside",
+            textfont=dict(color="#FFFFFF"),
+        ))
+        bar_fig.update_layout(
+            paper_bgcolor="#000000",
+            plot_bgcolor="#1A1A1A",
+            font=dict(color="#FFFFFF"),
+            xaxis=dict(tickfont=dict(color="#FFFFFF")),
+            yaxis=dict(tickfont=dict(color="#FFFFFF"), title="kUSD/year"),
+            margin=dict(l=40, r=40, t=20, b=60),
+        )
+        st.plotly_chart(bar_fig, use_container_width=True)
+
+    # ── TCO breakdown ─────────────────────────────────────────────────────────
+    if results["app_details"]:
+        st.markdown("#### TCO by Application (kUSD/year)")
+        tco_fig = go.Figure(go.Bar(
+            x=[d["name"] for d in results["app_details"]],
+            y=[d["tco"] for d in results["app_details"]],
+            marker_color="#7B00CC",
+            text=[f"{v:.1f}" for v in [d["tco"] for d in results["app_details"]]],
+            textposition="outside",
+            textfont=dict(color="#FFFFFF"),
+        ))
+        tco_fig.update_layout(
+            paper_bgcolor="#000000",
+            plot_bgcolor="#1A1A1A",
+            font=dict(color="#FFFFFF"),
+            xaxis=dict(tickfont=dict(color="#FFFFFF")),
+            yaxis=dict(tickfont=dict(color="#FFFFFF"), title="kUSD/year"),
+            margin=dict(l=40, r=40, t=20, b=60),
+        )
+        st.plotly_chart(tco_fig, use_container_width=True)
+
+    # ── Dimension interest breakdown ──────────────────────────────────────────
+    st.markdown("#### Interest Cost by Dimension (kUSD/year)")
+    dim_interest_fig = go.Figure(go.Bar(
+        x=["Applications", "Infrastructure", "Architecture", "People"],
+        y=[
+            results["interest_by_dimension"]["application"],
+            results["interest_by_dimension"]["infrastructure"],
+            results["interest_by_dimension"]["architecture"],
+            results["interest_by_dimension"]["people"],
+        ],
+        marker_color=["#A100FF", "#CC00FF", "#7B00CC", "#550088"],
+        text=[f"{v:.1f}" for v in [
+            results["interest_by_dimension"]["application"],
+            results["interest_by_dimension"]["infrastructure"],
+            results["interest_by_dimension"]["architecture"],
+            results["interest_by_dimension"]["people"],
+        ]],
+        textposition="outside",
+        textfont=dict(color="#FFFFFF"),
+    ))
+    dim_interest_fig.update_layout(
+        paper_bgcolor="#000000",
+        plot_bgcolor="#1A1A1A",
+        font=dict(color="#FFFFFF"),
+        xaxis=dict(tickfont=dict(color="#FFFFFF")),
+        yaxis=dict(tickfont=dict(color="#FFFFFF"), title="kUSD/year"),
+        margin=dict(l=40, r=40, t=20, b=40),
+    )
+    st.plotly_chart(dim_interest_fig, use_container_width=True)
