@@ -1,3 +1,4 @@
+import copy
 import json
 import streamlit as st
 
@@ -129,7 +130,7 @@ def _make_default_component(comp_id: int) -> dict:
 
 
 if "assessment" not in st.session_state:
-    st.session_state.assessment = _DEFAULT_ASSESSMENT.copy()
+    st.session_state.assessment = copy.deepcopy(_DEFAULT_ASSESSMENT)
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
@@ -151,8 +152,13 @@ with st.sidebar:
     if uploaded is not None:
         try:
             loaded = json.loads(uploaded.read())
-            merged = _DEFAULT_ASSESSMENT.copy()
-            merged.update(loaded)
+            merged = copy.deepcopy(_DEFAULT_ASSESSMENT)
+            for key in merged:
+                if key in loaded:
+                    if isinstance(merged[key], dict) and isinstance(loaded[key], dict):
+                        merged[key].update(loaded[key])
+                    else:
+                        merged[key] = loaded[key]
             st.session_state.assessment = merged
             if "results" in st.session_state:
                 del st.session_state["results"]
@@ -520,13 +526,14 @@ with tab_arch:
 
     st.markdown("#### Architecture Metrics")
 
-    def _arch_selectbox(field, label, metric_key):
+    def _arch_selectbox(field, label, metric_key, disabled=False):
         opts = [""] + [opt for opt, _ in SCORING_OPTIONS["architecture"][metric_key]]
         current = arch.get(field, "")
         arch[field] = st.selectbox(
             label,
             opts,
             index=opts.index(current) if current in opts else 0,
+            disabled=disabled,
             key=f"arch_{field}",
         )
 
@@ -541,8 +548,8 @@ with tab_arch:
                 break
 
     tools_disabled = ea_maturity_score > 3
-    _arch_selectbox("tools_driven_arch", "Tools Driven Architecture Management" + (" (N/A when EA maturity score > 3)" if tools_disabled else ""), "tools_driven_arch")
-    _arch_selectbox("architecture_compliance", "Architecture Compliance" + (" (N/A when EA maturity score > 3)" if tools_disabled else ""), "architecture_compliance")
+    _arch_selectbox("tools_driven_arch", "Tools Driven Architecture Management" + (" (N/A when EA maturity score > 3)" if tools_disabled else ""), "tools_driven_arch", disabled=tools_disabled)
+    _arch_selectbox("architecture_compliance", "Architecture Compliance" + (" (N/A when EA maturity score > 3)" if tools_disabled else ""), "architecture_compliance", disabled=tools_disabled)
     _arch_selectbox("duplicate_capabilities", "Duplicate Capabilities", "duplicate_capabilities")
 
     if tools_disabled:
