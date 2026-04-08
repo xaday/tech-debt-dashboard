@@ -74,6 +74,29 @@
         "architecture_compliance": "Non Compliant",
         "niche_skills": "Predominantly niche skills (> 40% of team)"
       }
+    },
+    {
+      "id": "APP-004",
+      "name": "HR Management Suite",
+      "type": "SaaS",
+      "portfolio": "HR & Operations",
+      "dev_resources": 0,
+      "dev_cost_per_resource": 0,
+      "support_resources": 1,
+      "support_cost_per_resource": 55,
+      "license_cost": 200,
+      "infra_cost": 0,
+      "hardware_sw_cost": 0,
+      "metrics": {
+        "documentation": "Updated every release/quarter",
+        "code_quality": "",
+        "code_duplication": "",
+        "ease_of_integration": "Very easy",
+        "platform_currency": "Maintained at N level",
+        "incident_fixes": "Incidents are less than 5%",
+        "architecture_compliance": "Fully Compliant",
+        "niche_skills": "No niche skills required"
+      }
     }
   ],
   "infrastructure": [
@@ -123,6 +146,22 @@
       "metrics": {
         "eol": "Component is 0-6 months from EOL.",
         "incident_fixes": "Infra incidents are less than 1%"
+      }
+    },
+    {
+      "id": "INFRA-004",
+      "component_name": "IBM WebSphere Middleware",
+      "component_type": "Middleware",
+      "linked_app_id": "APP-001",
+      "engg_resources": 1,
+      "engg_cost_per_resource": 75,
+      "support_resources": 1,
+      "support_cost_per_resource": 60,
+      "license_cost": 80,
+      "support_contract_cost": 30,
+      "metrics": {
+        "eol": "Component is 7-12 months from EOL.",
+        "incident_fixes": "Infra incidents are between 1% to 3%"
       }
     }
   ],
