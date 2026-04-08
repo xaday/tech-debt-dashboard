@@ -150,22 +150,24 @@ with st.sidebar:
 
     uploaded = st.file_uploader("Load JSON", type="json", label_visibility="collapsed")
     if uploaded is not None:
-        try:
-            loaded = json.loads(uploaded.read())
-            merged = copy.deepcopy(_DEFAULT_ASSESSMENT)
-            for key in merged:
-                if key in loaded:
-                    if isinstance(merged[key], dict) and isinstance(loaded[key], dict):
-                        merged[key].update(loaded[key])
-                    else:
-                        merged[key] = loaded[key]
-            st.session_state.assessment = merged
-            if "results" in st.session_state:
-                del st.session_state["results"]
-            st.success("Assessment loaded.")
-            st.rerun()
-        except Exception as exc:
-            st.error(f"Failed to load JSON: {exc}")
+        file_id = f"{uploaded.name}_{uploaded.size}"
+        if st.session_state.get("_loaded_file_id") != file_id:
+            try:
+                loaded = json.loads(uploaded.read())
+                merged = copy.deepcopy(_DEFAULT_ASSESSMENT)
+                for key in merged:
+                    if key in loaded:
+                        if isinstance(merged[key], dict) and isinstance(loaded[key], dict):
+                            merged[key].update(loaded[key])
+                        else:
+                            merged[key] = loaded[key]
+                st.session_state.assessment = merged
+                st.session_state["_loaded_file_id"] = file_id
+                if "results" in st.session_state:
+                    del st.session_state["results"]
+                st.success("Assessment loaded.")
+            except Exception as exc:
+                st.error(f"Failed to load JSON: {exc}")
 
     st.markdown("---")
     st.markdown("### Export")
