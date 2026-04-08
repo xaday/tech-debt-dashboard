@@ -13,14 +13,14 @@ _CODE_ONLY_METRICS = {"code_quality", "code_duplication"}
 
 def calc_app_interest(app: dict) -> float:
     """
-    Calculate annual interest cost (k€) for one application.
+    Calculate annual interest cost (€) for one application.
 
     app must have:
       type: str (application type)
       dev_resources: float
-      dev_cost_per_resource: float (k€/year)
+      dev_cost_per_resource: float (€/year)
       support_resources: float
-      support_cost_per_resource: float (k€/year)
+      support_cost_per_resource: float (€/year)
       scores: dict of metric_name → score (int)
     """
     annual_dev = app["dev_resources"] * app["dev_cost_per_resource"]
@@ -40,14 +40,14 @@ def calc_app_interest(app: dict) -> float:
 
 def calc_infra_interest(component: dict) -> float:
     """
-    Calculate annual interest cost (k€) for one infrastructure component.
+    Calculate annual interest cost (€) for one infrastructure component.
 
     component must have:
       component_type: str (Hardware/Operating System/Middleware/Database/Storage)
       engg_resources: float
-      engg_cost_per_resource: float (k€/year)
+      engg_cost_per_resource: float (€/year)
       support_resources: float
-      support_cost_per_resource: float (k€/year)
+      support_cost_per_resource: float (€/year)
       scores: dict with keys 'eol' and 'incident_fixes'
     """
     annual_engg = component["engg_resources"] * component["engg_cost_per_resource"]
@@ -69,12 +69,12 @@ def calc_infra_interest(component: dict) -> float:
 
 def calc_arch_interest(arch: dict) -> float:
     """
-    Calculate annual interest cost (k€) for the architecture dimension.
+    Calculate annual interest cost (€) for the architecture dimension.
 
     arch must have:
-      total_dev_labor: float (k€/year)
-      total_support_labor: float (k€/year)
-      total_ea_labor: float (k€/year)
+      total_dev_labor: float (€/year)
+      total_support_labor: float (€/year)
+      total_ea_labor: float (€/year)
       scores: dict with ea_op_model_maturity, tools_driven_arch,
               architecture_compliance, duplicate_capabilities
     """
@@ -98,12 +98,12 @@ def calc_arch_interest(arch: dict) -> float:
 
 def calc_people_interest(people: dict) -> float:
     """
-    Calculate annual interest cost (k€) for the people dimension.
+    Calculate annual interest cost (€) for the people dimension.
 
     people must have:
-      total_dev_labor: float (k€/year)
-      total_support_labor: float (k€/year)
-      total_ea_labor: float (k€/year)
+      total_dev_labor: float (€/year)
+      total_support_labor: float (€/year)
+      total_ea_labor: float (€/year)
       scores: dict with it_ea_skills, org_change_management,
               team_motivation, genai_intervention
     """
