@@ -1,6 +1,6 @@
 def calc_tco(app: dict) -> float:
     """
-    Calculate Total Cost of Ownership (kUSD/year) for one application.
+    Calculate Total Cost of Ownership (k€/year) for one application.
 
     app must have: dev_resources, dev_cost_per_resource, support_resources,
     support_cost_per_resource, license_cost, infra_cost, hardware_sw_cost

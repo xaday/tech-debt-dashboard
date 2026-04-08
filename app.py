@@ -398,12 +398,12 @@ with tab_apps:
                 app["portfolio"] = st.text_input("Portfolio / BU", value=app["portfolio"], key=f"app_portfolio_{idx}")
             with c2:
                 app["dev_resources"] = st.number_input("Dev Resources (FTEs)", value=float(app["dev_resources"]), min_value=0.0, key=f"app_dev_res_{idx}")
-                app["dev_cost_per_resource"] = st.number_input("Dev Cost/Resource (kUSD/year)", value=float(app["dev_cost_per_resource"]), min_value=0.0, key=f"app_dev_cost_{idx}")
+                app["dev_cost_per_resource"] = st.number_input("Dev Cost/Resource (k€/year)", value=float(app["dev_cost_per_resource"]), min_value=0.0, key=f"app_dev_cost_{idx}")
                 app["support_resources"] = st.number_input("Support Resources (FTEs)", value=float(app["support_resources"]), min_value=0.0, key=f"app_sup_res_{idx}")
-                app["support_cost_per_resource"] = st.number_input("Support Cost/Resource (kUSD/year)", value=float(app["support_cost_per_resource"]), min_value=0.0, key=f"app_sup_cost_{idx}")
-                app["license_cost"] = st.number_input("License Cost (kUSD/year)", value=float(app["license_cost"]), min_value=0.0, key=f"app_lic_{idx}")
-                app["infra_cost"] = st.number_input("Infra Cost (kUSD/year)", value=float(app["infra_cost"]), min_value=0.0, key=f"app_infra_{idx}")
-                app["hardware_sw_cost"] = st.number_input("Hardware/SW Cost (kUSD/year)", value=float(app["hardware_sw_cost"]), min_value=0.0, key=f"app_hw_{idx}")
+                app["support_cost_per_resource"] = st.number_input("Support Cost/Resource (k€/year)", value=float(app["support_cost_per_resource"]), min_value=0.0, key=f"app_sup_cost_{idx}")
+                app["license_cost"] = st.number_input("License Cost (k€/year)", value=float(app["license_cost"]), min_value=0.0, key=f"app_lic_{idx}")
+                app["infra_cost"] = st.number_input("Infra Cost (k€/year)", value=float(app["infra_cost"]), min_value=0.0, key=f"app_infra_{idx}")
+                app["hardware_sw_cost"] = st.number_input("Hardware/SW Cost (k€/year)", value=float(app["hardware_sw_cost"]), min_value=0.0, key=f"app_hw_{idx}")
 
             st.markdown("**Tech Debt Metrics**")
             m_col1, m_col2 = st.columns(2)
@@ -478,11 +478,11 @@ with tab_infra:
                 )
             with c2:
                 comp["engg_resources"] = st.number_input("Engg Resources (FTEs)", value=float(comp["engg_resources"]), min_value=0.0, key=f"comp_engg_res_{idx}")
-                comp["engg_cost_per_resource"] = st.number_input("Engg Cost/Resource (kUSD/year)", value=float(comp["engg_cost_per_resource"]), min_value=0.0, key=f"comp_engg_cost_{idx}")
+                comp["engg_cost_per_resource"] = st.number_input("Engg Cost/Resource (k€/year)", value=float(comp["engg_cost_per_resource"]), min_value=0.0, key=f"comp_engg_cost_{idx}")
                 comp["support_resources"] = st.number_input("Support Resources (FTEs)", value=float(comp["support_resources"]), min_value=0.0, key=f"app_sup_res_c_{idx}")
-                comp["support_cost_per_resource"] = st.number_input("Support Cost/Resource (kUSD/year)", value=float(comp["support_cost_per_resource"]), min_value=0.0, key=f"app_sup_cost_c_{idx}")
-                comp["license_cost"] = st.number_input("License Cost (kUSD/year)", value=float(comp["license_cost"]), min_value=0.0, key=f"comp_lic_{idx}")
-                comp["support_contract_cost"] = st.number_input("Support Contract (kUSD/year)", value=float(comp["support_contract_cost"]), min_value=0.0, key=f"comp_contract_{idx}")
+                comp["support_cost_per_resource"] = st.number_input("Support Cost/Resource (k€/year)", value=float(comp["support_cost_per_resource"]), min_value=0.0, key=f"app_sup_cost_c_{idx}")
+                comp["license_cost"] = st.number_input("License Cost (k€/year)", value=float(comp["license_cost"]), min_value=0.0, key=f"comp_lic_{idx}")
+                comp["support_contract_cost"] = st.number_input("Support Contract (k€/year)", value=float(comp["support_contract_cost"]), min_value=0.0, key=f"comp_contract_{idx}")
 
             st.markdown("**Tech Debt Metrics**")
             m1, m2 = st.columns(2)
@@ -515,7 +515,7 @@ with tab_arch:
     st.markdown("### Architecture")
     arch = st.session_state.assessment["architecture"]
 
-    st.markdown("#### Labor Costs (kUSD/year)")
+    st.markdown("#### Labor Costs (k€/year)")
     c1, c2, c3 = st.columns(3)
     with c1:
         arch["total_dev_labor"] = st.number_input("Total Dev Labor", value=float(arch["total_dev_labor"]), min_value=0.0, key="arch_dev")
@@ -561,7 +561,7 @@ with tab_people:
     st.markdown("### People")
     people = st.session_state.assessment["people"]
 
-    st.markdown("#### Labor Costs (kUSD/year)")
+    st.markdown("#### Labor Costs (k€/year)")
     c1, c2, c3 = st.columns(3)
     with c1:
         people["total_dev_labor"] = st.number_input("Total Dev Labor", value=float(people["total_dev_labor"]), min_value=0.0, key="ppl_dev")
@@ -611,8 +611,8 @@ with tab_dashboard:
     k4.metric("People Score (avg)", f"{results['scores']['people']:.1f}")
 
     c1, c2 = st.columns(2)
-    c1.metric("Total Annual Interest (kUSD)", f"{results['total_interest']:.1f}")
-    c2.metric("Total TCO (kUSD/year)", f"{results['total_tco']:.1f}")
+    c1.metric("Total Annual Interest (k€)", f"{results['total_interest']:.1f}")
+    c2.metric("Total TCO (k€/year)", f"{results['total_tco']:.1f}")
 
     # ── Radar chart — scores by dimension ────────────────────────────────────
     st.markdown("#### Tech Debt Score by Dimension")
@@ -646,7 +646,7 @@ with tab_dashboard:
 
     # ── Bar chart — interest cost by application ──────────────────────────────
     if results["app_details"]:
-        st.markdown("#### Annual Interest Cost by Application (kUSD)")
+        st.markdown("#### Annual Interest Cost by Application (k€)")
         app_names = [d["name"] for d in results["app_details"]]
         app_interests = [d["interest"] for d in results["app_details"]]
         bar_fig = go.Figure(go.Bar(
@@ -662,14 +662,14 @@ with tab_dashboard:
             plot_bgcolor="#1A1A1A",
             font=dict(color="#FFFFFF"),
             xaxis=dict(tickfont=dict(color="#FFFFFF")),
-            yaxis=dict(tickfont=dict(color="#FFFFFF"), title="kUSD/year"),
+            yaxis=dict(tickfont=dict(color="#FFFFFF"), title="k€/year"),
             margin=dict(l=40, r=40, t=20, b=60),
         )
         st.plotly_chart(bar_fig, use_container_width=True)
 
     # ── TCO breakdown ─────────────────────────────────────────────────────────
     if results["app_details"]:
-        st.markdown("#### TCO by Application (kUSD/year)")
+        st.markdown("#### TCO by Application (k€/year)")
         tco_fig = go.Figure(go.Bar(
             x=[d["name"] for d in results["app_details"]],
             y=[d["tco"] for d in results["app_details"]],
@@ -683,13 +683,13 @@ with tab_dashboard:
             plot_bgcolor="#1A1A1A",
             font=dict(color="#FFFFFF"),
             xaxis=dict(tickfont=dict(color="#FFFFFF")),
-            yaxis=dict(tickfont=dict(color="#FFFFFF"), title="kUSD/year"),
+            yaxis=dict(tickfont=dict(color="#FFFFFF"), title="k€/year"),
             margin=dict(l=40, r=40, t=20, b=60),
         )
         st.plotly_chart(tco_fig, use_container_width=True)
 
     # ── Dimension interest breakdown ──────────────────────────────────────────
-    st.markdown("#### Interest Cost by Dimension (kUSD/year)")
+    st.markdown("#### Interest Cost by Dimension (k€/year)")
     dim_interest_fig = go.Figure(go.Bar(
         x=["Applications", "Infrastructure", "Architecture", "People"],
         y=[
@@ -713,7 +713,7 @@ with tab_dashboard:
         plot_bgcolor="#1A1A1A",
         font=dict(color="#FFFFFF"),
         xaxis=dict(tickfont=dict(color="#FFFFFF")),
-        yaxis=dict(tickfont=dict(color="#FFFFFF"), title="kUSD/year"),
+        yaxis=dict(tickfont=dict(color="#FFFFFF"), title="k€/year"),
         margin=dict(l=40, r=40, t=20, b=40),
     )
     st.plotly_chart(dim_interest_fig, use_container_width=True)

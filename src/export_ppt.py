@@ -75,8 +75,8 @@ def _add_kpi_slide(prs: Presentation, results: dict) -> None:
         ("Infrastructure Score", f"{scores.get('infrastructure', 0):.2f}"),
         ("Architecture Score", f"{scores.get('architecture', 0):.2f}"),
         ("People Score", f"{scores.get('people', 0):.2f}"),
-        ("Total Annual Interest", f"{results.get('total_interest', 0):.1f} kUSD"),
-        ("Total TCO", f"{results.get('total_tco', 0):.1f} kUSD/year"),
+        ("Total Annual Interest", f"{results.get('total_interest', 0):.1f} k€"),
+        ("Total TCO", f"{results.get('total_tco', 0):.1f} k€/year"),
     ]
 
     cols = 3
@@ -166,7 +166,7 @@ def _add_interest_slide(prs: Presentation, results: dict) -> None:
         val_box = slide.shapes.add_textbox(bar_start_x + bar_w + Inches(0.1), y, Inches(1.5), bar_h)
         vf = val_box.text_frame
         vp = vf.paragraphs[0]
-        vp.text = f"{value:.1f} kUSD"
+        vp.text = f"{value:.1f} k€"
         vp.font.size = Pt(11)
         vp.font.color.rgb = LIGHT_PURPLE
 
@@ -174,7 +174,7 @@ def _add_interest_slide(prs: Presentation, results: dict) -> None:
     tot_box = slide.shapes.add_textbox(Inches(0.4), total_y, Inches(9), Inches(0.5))
     tf = tot_box.text_frame
     tp = tf.paragraphs[0]
-    tp.text = f"Total Annual Interest: {total:.1f} kUSD"
+    tp.text = f"Total Annual Interest: {total:.1f} k€"
     tp.font.size = Pt(14)
     tp.font.bold = True
     tp.font.color.rgb = PURPLE

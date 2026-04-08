@@ -80,8 +80,8 @@ def generate_pdf(assessment: dict, results: dict) -> bytes:
     story.append(Paragraph("Financial Summary", heading_style))
     kpi_data = [
         ["Metric", "Value"],
-        ["Total Annual Tech Debt Interest", f"{interest:.1f} kUSD"],
-        ["Total Application TCO", f"{tco:.1f} kUSD/year"],
+        ["Total Annual Tech Debt Interest", f"{interest:.1f} k€"],
+        ["Total Application TCO", f"{tco:.1f} k€/year"],
         ["Applications assessed", str(len(assessment.get("applications", [])))],
         ["Infrastructure components assessed", str(len(assessment.get("infrastructure", [])))],
     ]
@@ -123,9 +123,9 @@ def generate_pdf(assessment: dict, results: dict) -> bytes:
     story.append(Spacer(1, 0.4 * cm))
 
     # Interest by dimension
-    story.append(Paragraph("Annual Interest Cost by Dimension (kUSD)", heading_style))
+    story.append(Paragraph("Annual Interest Cost by Dimension (k€)", heading_style))
     interest_dim = results.get("interest_by_dimension", {})
-    interest_data = [["Dimension", "Annual Interest (kUSD)"]]
+    interest_data = [["Dimension", "Annual Interest (k€)"]]
     for dim, label in [("application", "Application"), ("infrastructure", "Infrastructure"),
                        ("architecture", "Architecture"), ("people", "People")]:
         interest_data.append([label, f"{interest_dim.get(dim, 0):.1f}"])

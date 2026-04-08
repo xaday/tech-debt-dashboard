@@ -133,7 +133,7 @@ SCORING_OPTIONS = {
 
 # Interest cost percentages from 0.B Score to Interest Mapping
 # Application metrics: score → (dev_pct, support_pct)
-# Percentages applied to annual dev/support labor costs (kUSD)
+# Percentages applied to annual dev/support labor costs (k€)
 APP_INTEREST_PCTS = {
     "documentation": {
         1: (0.0, 0.0),
