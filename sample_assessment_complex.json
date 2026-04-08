@@ -1,0 +1,264 @@
+{
+  "client": {
+    "name": "GlobalBank S.A.",
+    "industry": "Financial Services",
+    "market": "Western Europe",
+    "size": "Large (5000–50000)"
+  },
+  "applications": [
+    {
+      "id": "APP-001",
+      "name": "Core Banking Platform",
+      "type": "Custom-Built",
+      "portfolio": "Retail Banking",
+      "dev_resources": 18,
+      "dev_cost_per_resource": 95,
+      "support_resources": 6,
+      "support_cost_per_resource": 75,
+      "license_cost": 250,
+      "infra_cost": 320,
+      "hardware_sw_cost": 80,
+      "metrics": {
+        "documentation": "Updated in 2-3 years, no specific plan",
+        "code_quality": "High complexity (>20% to <=30%)",
+        "code_duplication": "Duplication is high",
+        "ease_of_integration": "Quite Difficult",
+        "platform_currency": "Maintained at N-2 level",
+        "incident_fixes": "Incidents are between 15% to 20%",
+        "architecture_compliance": "Partially Compliant",
+        "niche_skills": "Significant niche skills (20% to 40% of team)"
+      }
+    },
+    {
+      "id": "APP-002",
+      "name": "Customer Portal",
+      "type": "PaaS",
+      "portfolio": "Digital Channels",
+      "dev_resources": 8,
+      "dev_cost_per_resource": 90,
+      "support_resources": 3,
+      "support_cost_per_resource": 65,
+      "license_cost": 120,
+      "infra_cost": 80,
+      "hardware_sw_cost": 15,
+      "metrics": {
+        "documentation": "Updated every 6 months",
+        "code_quality": "Medium complexity (>10% to <=15%)",
+        "code_duplication": "Duplication is low",
+        "ease_of_integration": "Moderate efforts",
+        "platform_currency": "Maintained at N-1 level",
+        "incident_fixes": "Incidents are between 5% to 10%",
+        "architecture_compliance": "Fully Compliant",
+        "niche_skills": "Minimal niche skills (< 10% of team)"
+      }
+    },
+    {
+      "id": "APP-003",
+      "name": "Legacy Reporting System",
+      "type": "Custom-Built",
+      "portfolio": "Finance & Compliance",
+      "dev_resources": 5,
+      "dev_cost_per_resource": 75,
+      "support_resources": 3,
+      "support_cost_per_resource": 60,
+      "license_cost": 40,
+      "infra_cost": 55,
+      "hardware_sw_cost": 25,
+      "metrics": {
+        "documentation": "Never gets updated/Does not exist",
+        "code_quality": "Very high complexity (>30%)",
+        "code_duplication": "Duplication is very high",
+        "ease_of_integration": "Extremely Difficult",
+        "platform_currency": "Maintained at > N-3 level",
+        "incident_fixes": "Incidents are greater than 20%",
+        "architecture_compliance": "Non Compliant",
+        "niche_skills": "Predominantly niche skills (> 40% of team)"
+      }
+    },
+    {
+      "id": "APP-004",
+      "name": "HR Management Suite",
+      "type": "SaaS",
+      "portfolio": "HR & Operations",
+      "dev_resources": 0,
+      "dev_cost_per_resource": 0,
+      "support_resources": 1,
+      "support_cost_per_resource": 55,
+      "license_cost": 220,
+      "infra_cost": 0,
+      "hardware_sw_cost": 0,
+      "metrics": {
+        "documentation": "Updated every release/quarter",
+        "code_quality": "",
+        "code_duplication": "",
+        "ease_of_integration": "Very easy",
+        "platform_currency": "Maintained at N level",
+        "incident_fixes": "Incidents are less than 5%",
+        "architecture_compliance": "Fully Compliant",
+        "niche_skills": "No niche skills required"
+      }
+    },
+    {
+      "id": "APP-005",
+      "name": "Risk Management Engine",
+      "type": "Custom-Built",
+      "portfolio": "Risk & Compliance",
+      "dev_resources": 10,
+      "dev_cost_per_resource": 100,
+      "support_resources": 4,
+      "support_cost_per_resource": 80,
+      "license_cost": 180,
+      "infra_cost": 140,
+      "hardware_sw_cost": 60,
+      "metrics": {
+        "documentation": "Updated every year",
+        "code_quality": "Moderate complexity (>15% to <=20%)",
+        "code_duplication": "Duplication is moderate",
+        "ease_of_integration": "Possible with some constraint",
+        "platform_currency": "Maintained at N-1 level",
+        "incident_fixes": "Incidents are between 10% to 15%",
+        "architecture_compliance": "Partially Compliant",
+        "niche_skills": "Some niche skills (10% to 20% of team)"
+      }
+    },
+    {
+      "id": "APP-006",
+      "name": "Payments Gateway",
+      "type": "PaaS",
+      "portfolio": "Payments",
+      "dev_resources": 7,
+      "dev_cost_per_resource": 95,
+      "support_resources": 3,
+      "support_cost_per_resource": 70,
+      "license_cost": 90,
+      "infra_cost": 100,
+      "hardware_sw_cost": 20,
+      "metrics": {
+        "documentation": "Updated every 6 months",
+        "code_quality": "Low/standard complexity (< 10%)",
+        "code_duplication": "Duplication is low",
+        "ease_of_integration": "Moderate efforts",
+        "platform_currency": "Maintained at N level",
+        "incident_fixes": "Incidents are between 5% to 10%",
+        "architecture_compliance": "Fully Compliant",
+        "niche_skills": "Minimal niche skills (< 10% of team)"
+      }
+    }
+  ],
+  "infrastructure": [
+    {
+      "id": "INFRA-001",
+      "component_name": "Oracle Database 11g",
+      "component_type": "Database",
+      "linked_app_id": "APP-001",
+      "engg_resources": 3,
+      "engg_cost_per_resource": 85,
+      "support_resources": 2,
+      "support_cost_per_resource": 65,
+      "license_cost": 200,
+      "support_contract_cost": 60,
+      "metrics": {
+        "eol": "Component is 7+ months past EOL.",
+        "incident_fixes": "Infra incidents are between 5% to 10%"
+      }
+    },
+    {
+      "id": "INFRA-002",
+      "component_name": "Windows Server 2012",
+      "component_type": "Operating System",
+      "linked_app_id": "APP-003",
+      "engg_resources": 2,
+      "engg_cost_per_resource": 70,
+      "support_resources": 1,
+      "support_cost_per_resource": 55,
+      "license_cost": 30,
+      "support_contract_cost": 20,
+      "metrics": {
+        "eol": "Component is 1-6 months past its official EOL date",
+        "incident_fixes": "Infra incidents are between 3% to 5%"
+      }
+    },
+    {
+      "id": "INFRA-003",
+      "component_name": "Cisco Catalyst 2960 Switch",
+      "component_type": "Hardware",
+      "linked_app_id": "",
+      "engg_resources": 1,
+      "engg_cost_per_resource": 65,
+      "support_resources": 1,
+      "support_cost_per_resource": 50,
+      "license_cost": 0,
+      "support_contract_cost": 25,
+      "metrics": {
+        "eol": "Component is 0-6 months from EOL.",
+        "incident_fixes": "Infra incidents are less than 1%"
+      }
+    },
+    {
+      "id": "INFRA-004",
+      "component_name": "IBM WebSphere Middleware",
+      "component_type": "Middleware",
+      "linked_app_id": "APP-001",
+      "engg_resources": 2,
+      "engg_cost_per_resource": 80,
+      "support_resources": 1,
+      "support_cost_per_resource": 65,
+      "license_cost": 100,
+      "support_contract_cost": 40,
+      "metrics": {
+        "eol": "Component is 7-12 months from EOL.",
+        "incident_fixes": "Infra incidents are between 1% to 3%"
+      }
+    },
+    {
+      "id": "INFRA-005",
+      "component_name": "NetApp SAN Storage",
+      "component_type": "Storage",
+      "linked_app_id": "APP-005",
+      "engg_resources": 1,
+      "engg_cost_per_resource": 75,
+      "support_resources": 1,
+      "support_cost_per_resource": 60,
+      "license_cost": 50,
+      "support_contract_cost": 35,
+      "metrics": {
+        "eol": "Component is 7+ months past EOL.",
+        "incident_fixes": "Infra incidents are between 3% to 5%"
+      }
+    },
+    {
+      "id": "INFRA-006",
+      "component_name": "Red Hat Enterprise Linux 7",
+      "component_type": "Operating System",
+      "linked_app_id": "APP-005",
+      "engg_resources": 2,
+      "engg_cost_per_resource": 72,
+      "support_resources": 1,
+      "support_cost_per_resource": 58,
+      "license_cost": 45,
+      "support_contract_cost": 30,
+      "metrics": {
+        "eol": "Component is 0-6 months from EOL.",
+        "incident_fixes": "Infra incidents are between 1% to 3%"
+      }
+    }
+  ],
+  "architecture": {
+    "total_dev_labor": 3200,
+    "total_support_labor": 950,
+    "total_ea_labor": 420,
+    "ea_op_model_maturity": "Repeatable with few EA capabilities",
+    "tools_driven_arch": "Repository is defined and managed on need basis, mostly at project level",
+    "architecture_compliance": "Partially Compliant",
+    "duplicate_capabilities": "Functional overlap is between 20% to 40%"
+  },
+  "people": {
+    "total_dev_labor": 3200,
+    "total_support_labor": 950,
+    "total_ea_labor": 420,
+    "it_ea_skills": "Gap for all skills are between 20% to 30%",
+    "org_change_management": "Processes are defined for some functions with adaption rate <60%",
+    "team_motivation": "Employment Continuation Indicator for the team is between 60% to 70%",
+    "genai_intervention": "Enabled with only conventional KM search capabilities or disparate document storage"
+  }
+}
