@@ -340,23 +340,245 @@ tab_client, tab_apps, tab_infra, tab_arch, tab_people, tab_dashboard = st.tabs([
 
 with tab_client:
     st.markdown("### Client Information")
-    st.info("Fill in client details.")
+    a = st.session_state.assessment
+
+    col1, col2 = st.columns(2)
+    with col1:
+        a["client"]["name"] = st.text_input(
+            "Client Name", value=a["client"]["name"], key="client_name"
+        )
+        a["client"]["industry"] = st.text_input(
+            "Industry", value=a["client"]["industry"], key="client_industry"
+        )
+    with col2:
+        a["client"]["market"] = st.text_input(
+            "Market / Region", value=a["client"]["market"], key="client_market"
+        )
+        _size_options = ["", "Small (<500 employees)", "Medium (500–5000)", "Large (5000–50000)", "Enterprise (>50000)"]
+        _current_size = a["client"]["size"] if a["client"]["size"] in _size_options else ""
+        a["client"]["size"] = st.selectbox(
+            "Company Size",
+            options=_size_options,
+            index=_size_options.index(_current_size),
+            key="client_size",
+        )
 
 with tab_apps:
+    from src.reference_data import SCORING_OPTIONS, CODE_METRIC_APP_TYPES
+
     st.markdown("### Applications")
-    st.info("Add applications.")
+    apps = st.session_state.assessment["applications"]
+
+    col_add, col_count = st.columns([1, 3])
+    with col_add:
+        if st.button("+ Add Application"):
+            apps.append(_make_default_app(len(apps) + 1))
+            st.rerun()
+    with col_count:
+        st.markdown(f"**{len(apps)} application(s)**")
+
+    for idx, app in enumerate(apps):
+        with st.expander(f"{'🟢' if app['name'] else '⚪'} {app['id']} — {app['name']}", expanded=(idx == 0)):
+            c1, c2 = st.columns(2)
+            with c1:
+                app["id"] = st.text_input("App ID", value=app["id"], key=f"app_id_{idx}")
+                app["name"] = st.text_input("Name", value=app["name"], key=f"app_name_{idx}")
+                app["type"] = st.selectbox(
+                    "Type",
+                    ["Custom-Built", "PaaS", "SaaS", "COTS"],
+                    index=["Custom-Built", "PaaS", "SaaS", "COTS"].index(app["type"]) if app["type"] in ["Custom-Built", "PaaS", "SaaS", "COTS"] else 0,
+                    key=f"app_type_{idx}",
+                )
+                app["portfolio"] = st.text_input("Portfolio / BU", value=app["portfolio"], key=f"app_portfolio_{idx}")
+            with c2:
+                app["dev_resources"] = st.number_input("Dev Resources (FTEs)", value=float(app["dev_resources"]), min_value=0.0, key=f"app_dev_res_{idx}")
+                app["dev_cost_per_resource"] = st.number_input("Dev Cost/Resource (kUSD/year)", value=float(app["dev_cost_per_resource"]), min_value=0.0, key=f"app_dev_cost_{idx}")
+                app["support_resources"] = st.number_input("Support Resources (FTEs)", value=float(app["support_resources"]), min_value=0.0, key=f"app_sup_res_{idx}")
+                app["support_cost_per_resource"] = st.number_input("Support Cost/Resource (kUSD/year)", value=float(app["support_cost_per_resource"]), min_value=0.0, key=f"app_sup_cost_{idx}")
+                app["license_cost"] = st.number_input("License Cost (kUSD/year)", value=float(app["license_cost"]), min_value=0.0, key=f"app_lic_{idx}")
+                app["infra_cost"] = st.number_input("Infra Cost (kUSD/year)", value=float(app["infra_cost"]), min_value=0.0, key=f"app_infra_{idx}")
+                app["hardware_sw_cost"] = st.number_input("Hardware/SW Cost (kUSD/year)", value=float(app["hardware_sw_cost"]), min_value=0.0, key=f"app_hw_{idx}")
+
+            st.markdown("**Tech Debt Metrics**")
+            m_col1, m_col2 = st.columns(2)
+            app_type = app["type"]
+            with m_col1:
+                for metric in ["documentation", "ease_of_integration", "platform_currency", "incident_fixes"]:
+                    opts = [""] + [opt for opt, _ in SCORING_OPTIONS["application"][metric]]
+                    current = app["metrics"].get(metric, "")
+                    idx_val = opts.index(current) if current in opts else 0
+                    app["metrics"][metric] = st.selectbox(
+                        metric.replace("_", " ").title(),
+                        opts,
+                        index=idx_val,
+                        key=f"app_{metric}_{idx}",
+                    )
+            with m_col2:
+                for metric in ["code_quality", "code_duplication", "architecture_compliance", "niche_skills"]:
+                    opts = [""] + [opt for opt, _ in SCORING_OPTIONS["application"][metric]]
+                    current = app["metrics"].get(metric, "")
+                    idx_val = opts.index(current) if current in opts else 0
+                    disabled = metric in ("code_quality", "code_duplication") and app_type not in CODE_METRIC_APP_TYPES
+                    label = metric.replace("_", " ").title()
+                    if disabled:
+                        label += " (N/A for this app type)"
+                    app["metrics"][metric] = st.selectbox(
+                        label,
+                        opts,
+                        index=idx_val,
+                        disabled=disabled,
+                        key=f"app_{metric}_{idx}",
+                    )
+
+            if st.button("Remove", key=f"remove_app_{idx}"):
+                apps.pop(idx)
+                st.rerun()
 
 with tab_infra:
+    from src.reference_data import SCORING_OPTIONS, INFRA_COMPONENT_TYPES
+
     st.markdown("### Infrastructure")
-    st.info("Add infrastructure components.")
+    components = st.session_state.assessment["infrastructure"]
+    apps = st.session_state.assessment["applications"]
+
+    col_add, col_count = st.columns([1, 3])
+    with col_add:
+        if st.button("+ Add Component"):
+            components.append(_make_default_component(len(components) + 1))
+            st.rerun()
+    with col_count:
+        st.markdown(f"**{len(components)} component(s)**")
+
+    app_ids = [""] + [a["id"] for a in apps]
+
+    for idx, comp in enumerate(components):
+        with st.expander(f"{'🟢' if comp['component_name'] else '⚪'} {comp['id']} — {comp['component_name']}", expanded=(idx == 0)):
+            c1, c2 = st.columns(2)
+            with c1:
+                comp["id"] = st.text_input("Component ID", value=comp["id"], key=f"comp_id_{idx}")
+                comp["component_name"] = st.text_input("Name", value=comp["component_name"], key=f"comp_name_{idx}")
+                comp["component_type"] = st.selectbox(
+                    "Component Type",
+                    INFRA_COMPONENT_TYPES,
+                    index=INFRA_COMPONENT_TYPES.index(comp["component_type"]) if comp["component_type"] in INFRA_COMPONENT_TYPES else 0,
+                    key=f"comp_type_{idx}",
+                )
+                linked = comp["linked_app_id"] if comp["linked_app_id"] in app_ids else ""
+                comp["linked_app_id"] = st.selectbox(
+                    "Linked Application",
+                    app_ids,
+                    index=app_ids.index(linked),
+                    key=f"comp_app_{idx}",
+                )
+            with c2:
+                comp["engg_resources"] = st.number_input("Engg Resources (FTEs)", value=float(comp["engg_resources"]), min_value=0.0, key=f"comp_engg_res_{idx}")
+                comp["engg_cost_per_resource"] = st.number_input("Engg Cost/Resource (kUSD/year)", value=float(comp["engg_cost_per_resource"]), min_value=0.0, key=f"comp_engg_cost_{idx}")
+                comp["support_resources"] = st.number_input("Support Resources (FTEs)", value=float(comp["support_resources"]), min_value=0.0, key=f"app_sup_res_c_{idx}")
+                comp["support_cost_per_resource"] = st.number_input("Support Cost/Resource (kUSD/year)", value=float(comp["support_cost_per_resource"]), min_value=0.0, key=f"app_sup_cost_c_{idx}")
+                comp["license_cost"] = st.number_input("License Cost (kUSD/year)", value=float(comp["license_cost"]), min_value=0.0, key=f"comp_lic_{idx}")
+                comp["support_contract_cost"] = st.number_input("Support Contract (kUSD/year)", value=float(comp["support_contract_cost"]), min_value=0.0, key=f"comp_contract_{idx}")
+
+            st.markdown("**Tech Debt Metrics**")
+            m1, m2 = st.columns(2)
+            with m1:
+                eol_opts = [""] + [opt for opt, _ in SCORING_OPTIONS["infrastructure"]["eol"]]
+                current_eol = comp["metrics"].get("eol", "")
+                comp["metrics"]["eol"] = st.selectbox(
+                    "EOL Status",
+                    eol_opts,
+                    index=eol_opts.index(current_eol) if current_eol in eol_opts else 0,
+                    key=f"comp_eol_{idx}",
+                )
+            with m2:
+                inc_opts = [""] + [opt for opt, _ in SCORING_OPTIONS["infrastructure"]["incident_fixes"]]
+                current_inc = comp["metrics"].get("incident_fixes", "")
+                comp["metrics"]["incident_fixes"] = st.selectbox(
+                    "Incident Fixes",
+                    inc_opts,
+                    index=inc_opts.index(current_inc) if current_inc in inc_opts else 0,
+                    key=f"comp_inc_{idx}",
+                )
+
+            if st.button("Remove", key=f"remove_comp_{idx}"):
+                components.pop(idx)
+                st.rerun()
 
 with tab_arch:
+    from src.reference_data import SCORING_OPTIONS
+
     st.markdown("### Architecture")
-    st.info("Fill in architecture data.")
+    arch = st.session_state.assessment["architecture"]
+
+    st.markdown("#### Labor Costs (kUSD/year)")
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        arch["total_dev_labor"] = st.number_input("Total Dev Labor", value=float(arch["total_dev_labor"]), min_value=0.0, key="arch_dev")
+    with c2:
+        arch["total_support_labor"] = st.number_input("Total Support Labor", value=float(arch["total_support_labor"]), min_value=0.0, key="arch_support")
+    with c3:
+        arch["total_ea_labor"] = st.number_input("Total EA Labor", value=float(arch["total_ea_labor"]), min_value=0.0, key="arch_ea")
+
+    st.markdown("#### Architecture Metrics")
+
+    def _arch_selectbox(field, label, metric_key):
+        opts = [""] + [opt for opt, _ in SCORING_OPTIONS["architecture"][metric_key]]
+        current = arch.get(field, "")
+        arch[field] = st.selectbox(
+            label,
+            opts,
+            index=opts.index(current) if current in opts else 0,
+            key=f"arch_{field}",
+        )
+
+    _arch_selectbox("ea_op_model_maturity", "EA Op Model Maturity", "ea_op_model_maturity")
+
+    ea_maturity_score = 1
+    ea_val = arch.get("ea_op_model_maturity", "")
+    if ea_val:
+        for opt, sc in SCORING_OPTIONS["architecture"]["ea_op_model_maturity"]:
+            if opt == ea_val:
+                ea_maturity_score = sc
+                break
+
+    tools_disabled = ea_maturity_score > 3
+    _arch_selectbox("tools_driven_arch", "Tools Driven Architecture Management" + (" (N/A when EA maturity score > 3)" if tools_disabled else ""), "tools_driven_arch")
+    _arch_selectbox("architecture_compliance", "Architecture Compliance" + (" (N/A when EA maturity score > 3)" if tools_disabled else ""), "architecture_compliance")
+    _arch_selectbox("duplicate_capabilities", "Duplicate Capabilities", "duplicate_capabilities")
+
+    if tools_disabled:
+        st.caption("Tools Driven Architecture Management and Architecture Compliance are not applicable when EA Op Model Maturity score > 3.")
 
 with tab_people:
+    from src.reference_data import SCORING_OPTIONS
+
     st.markdown("### People")
-    st.info("Fill in people data.")
+    people = st.session_state.assessment["people"]
+
+    st.markdown("#### Labor Costs (kUSD/year)")
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        people["total_dev_labor"] = st.number_input("Total Dev Labor", value=float(people["total_dev_labor"]), min_value=0.0, key="ppl_dev")
+    with c2:
+        people["total_support_labor"] = st.number_input("Total Support Labor", value=float(people["total_support_labor"]), min_value=0.0, key="ppl_support")
+    with c3:
+        people["total_ea_labor"] = st.number_input("Total EA Labor", value=float(people["total_ea_labor"]), min_value=0.0, key="ppl_ea")
+
+    st.markdown("#### People Metrics")
+
+    def _ppl_selectbox(field, label, metric_key):
+        opts = [""] + [opt for opt, _ in SCORING_OPTIONS["people"][metric_key]]
+        current = people.get(field, "")
+        people[field] = st.selectbox(
+            label,
+            opts,
+            index=opts.index(current) if current in opts else 0,
+            key=f"ppl_{field}",
+        )
+
+    _ppl_selectbox("it_ea_skills", "IT & EA Skills and Proficiencies", "it_ea_skills")
+    _ppl_selectbox("org_change_management", "Organisation Change Management", "org_change_management")
+    _ppl_selectbox("team_motivation", "IT & EA Team Motivation", "team_motivation")
+    _ppl_selectbox("genai_intervention", "GenAI Intervention", "genai_intervention")
 
 with tab_dashboard:
     st.markdown("### Dashboard")
