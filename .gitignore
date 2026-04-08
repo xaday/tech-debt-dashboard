@@ -6,3 +6,7 @@ htmlcov/
 *.egg-info/
 dist/
 .superpowers/
+venv/
+.venv/
+env/
+.env
